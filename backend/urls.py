@@ -8,9 +8,9 @@ urlpatterns = [
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
     
+    # User/auth related 
+    path('user/', include('account.api.urls')),
+    
     # Plant management app
     path('plant/', include('plant.api.urls')),
-    
-    # Note model for testing
-    path('notes/', include('account.api.urls'))
 ]

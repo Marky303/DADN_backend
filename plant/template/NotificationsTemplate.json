@@ -1,0 +1,18 @@
+{
+  "Log": [
+    {
+      "id": "1",
+      "Time": "2025-02-22T08:00:00Z",
+      "Type": "warning",
+      "Content": "Soil humidity is low",
+      "Seen": true
+    },
+    {
+      "id": "2",
+      "Time": "2025-02-22T08:00:00Z",
+      "Type": "info",
+      "Content": "Applied Cactus Plan",
+      "Seen": false
+    }
+  ]
+}

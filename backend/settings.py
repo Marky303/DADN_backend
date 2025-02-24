@@ -151,7 +151,7 @@ SIMPLE_JWT = {
 # JWT settings/configurations
 SIMPLE_JWT = {
     # Access token's lifespan
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=9999),
     
     # Refresh token lifespan (login after 10 days)
     "REFRESH_TOKEN_LIFETIME": timedelta(days=15),
@@ -271,4 +271,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'account.userAccount'
+AUTH_USER_MODEL = 'account.Account'
