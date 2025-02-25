@@ -8,14 +8,3 @@ class UserCreateSerializer(UserCreateSerializer):
     class Meta(UserCreateSerializer.Meta):
         model = User
         fields = ('id', 'email', 'name', 'password') 
-                
-# EXAMPLE SERIALIZER FOR TESTING
-# Note model for testing
-from account.models import Note
-from rest_framework.serializers import ModelSerializer        
-
-# Note serializer
-class NoteSerializer(ModelSerializer):
-    class Meta:
-        model = Note
-        fields = '__all__'

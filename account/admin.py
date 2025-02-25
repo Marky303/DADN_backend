@@ -1,7 +1,6 @@
 from django.contrib import admin
 
-from .models import Note, UserAccount
+from .models import Account
 
 # Register account models
-admin.site.register(UserAccount)
-admin.site.register(Note)
+admin.site.register(Account)

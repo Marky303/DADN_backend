@@ -5,7 +5,6 @@ from . import views
 
 # Setting up urls patterns
 urlpatterns = [
-    # Note example url
-    path('getNotes/', views.getNotes)
-    
+    # User related endpoints
+    path('updateinfo/', views.EditUserInfo),
 ]

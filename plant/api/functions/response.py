@@ -14,6 +14,9 @@ def ResponseError(error=["Something happened"]):
     return Response(content, status=status.HTTP_400_BAD_REQUEST)    
 
 
+def ResponseObject(obj, status=status.HTTP_200_OK):
+    return Response(obj, status=status)
+
 # Response a list of object
 def ResponseList(content, totalPage, status=status.HTTP_200_OK):
     body = {
