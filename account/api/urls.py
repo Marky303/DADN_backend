@@ -7,4 +7,5 @@ from . import views
 urlpatterns = [
     # User related endpoints
     path('updateinfo/', views.EditUserInfo),
+    path('info/',       views.GetUserInfo),
 ]

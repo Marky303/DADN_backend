@@ -10,4 +10,5 @@ urlpatterns = [
     
     # User related endpoints
     path('register/', views.RegisterPot),
+    path('getallpots/', views.GetAllPots)
 ]
