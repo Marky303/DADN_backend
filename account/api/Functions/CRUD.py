@@ -17,5 +17,7 @@ def UpdateUserInfoCRUD(request):
     
     currentUser.save()
     
+def GetUserInfoCRUD(request):
+    return request.user
     
     

@@ -13,3 +13,6 @@ def InitPotCRUD(request):
 def RegisterPotCRUD(request, pot):
     pot.Account = request.user
     pot.save()
+    
+def GetAllPotCRUD(request):
+    return PotRegistry.objects.filter(Account=request.user)

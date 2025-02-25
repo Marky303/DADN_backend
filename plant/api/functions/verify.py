@@ -9,7 +9,6 @@ def VerifyManufacturer(request, error):
     if not user.is_manufacturer:
         error.append("Only manufacturer can init a plant")
     
-# TODO: Complete this
 def VerifyPotRegisterInfo(request, error):
     dict = request.body.decode("UTF-8")
     registerInfo = json.loads(dict)

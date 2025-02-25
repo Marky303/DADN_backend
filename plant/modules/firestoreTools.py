@@ -1,11 +1,12 @@
 import os
 from dotenv import load_dotenv
 load_dotenv()
-from datetime import datetime
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 from django.conf import settings
+
+from plant.template.PotTemplate import *
 
 class FireStoreClient:
     _db = None
@@ -25,37 +26,18 @@ class FireStoreClient:
             cls._db = firestore.client()
         return cls._db
     
-    # TODO: Save templates somewhere then import
     @classmethod
     def InitPotDocuments(cls):
         db = cls._getFireStoreClient()
-        
-        timestampNow = datetime.now().timestamp()
-        statTemplate = {"Log": [{"Time": timestampNow, "Value": 0}]}
         
         serialID = None
         try:
             update_time, temperatureRef = db.collection(cls._plantTemperatureCollectionName).add(statTemplate)
             serialID = temperatureRef.id
-            
             db.collection(cls._plantMoistureCollectionName).document(serialID).set(statTemplate)
             db.collection(cls._plantSoilHumidityCollectionName).document(serialID).set(statTemplate)
             db.collection(cls._plantLightCollectionName).document(serialID).set(statTemplate)
-            
-            notificationsTemplate = {
-                                        "Log": [
-                                                {
-                                                    "id": "1",
-                                                    "Time": timestampNow,
-                                                    "Type": "info",
-                                                    "Content": "Pot is manufactured",
-                                                    "Seen": False
-                                                }
-                                            ]
-                                    }
             db.collection(cls._plantNotificationsCollectionName).document(serialID).set(notificationsTemplate)
-            
-            planTemplate = {"plan": None}
             db.collection(cls._plantPlanCollectionName).document(serialID).set(planTemplate)
             
         except Exception as e:
@@ -69,9 +51,10 @@ class FireStoreClient:
             
         return serialID
     
-    # @classmethod
-    # def UpdateChatHistoryDocument(cls, documentID, chatHistory):
-    #     db = cls._getFireStoreClient()
-    #     db.collection(cls._historyCollectionName).document(documentID).set(chatHistory)
+    # TODO: Implement Notify function
+    @classmethod
+    def Notify(cls, serialID, type, message):
+        db = cls._getFireStoreClient()
+        db.collection(cls._plantNotificationsCollectionName).document(serialID)
 
     

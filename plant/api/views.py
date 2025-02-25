@@ -59,3 +59,23 @@ def RegisterPot(request):
             error.append(str(e))
         print(error)
         return ResponseError(error)
+    
+# Get all user's pots
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def GetAllPots(request):
+    try:
+        error = []
+        
+        pots = GetAllPotCRUD(request)
+        
+        serializer = PotRegistrySerializer(pots, many=True)
+        
+        return ResponseList(serializer.data, 1)
+    except Exception as e:
+        # Response a error code and error content        
+        if str(e):
+            print(str(e))
+            error.append(str(e))
+        print(error)
+        return ResponseError(error)

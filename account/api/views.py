@@ -35,6 +35,25 @@ def EditUserInfo(request):
             error.append(str(e))
         print(error)
         return ResponseError(error)
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def GetUserInfo(request):
+    try:
+        error = []
+        
+        serializer = UserSerializer(request.user, many=False)
+        
+        # Response successful code
+        return ResponseObject(serializer.data)
+        
+    except Exception as e:
+        # Response a error code and error content        
+        if str(e):
+            print(str(e))
+            error.append(str(e))
+        print(error)
+        return ResponseError(error)
 
 
 
