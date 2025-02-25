@@ -51,10 +51,26 @@ class FireStoreClient:
             
         return serialID
     
-    # TODO: Implement Notify function
+    @staticmethod
+    def GetNextNotificationId(notificationRef):
+        doc = notificationRef.get()
+        if doc.exists:
+            currentLog = doc.to_dict().get("Log", [])
+            nextID = str(len(currentLog) + 1)
+        return nextID
+    
     @classmethod
-    def Notify(cls, serialID, type, message):
+    def Notify(cls, serialID, content, type="info"):
         db = cls._getFireStoreClient()
-        db.collection(cls._plantNotificationsCollectionName).document(serialID)
+        notificationRef = db.collection(cls._plantNotificationsCollectionName).document(serialID)
+        
+        notification = notificationTempate
+        notification["Type"] = type
+        notification["Content"] = content
+        notification["id"] = cls.GetNextNotificationId(notificationRef)  
+        
+        notificationRef.update({
+            "Log": firestore.ArrayUnion([notification])
+        })
 
     

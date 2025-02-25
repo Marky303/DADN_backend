@@ -26,8 +26,7 @@ def VerifyPotRegisterInfo(request, error):
         validate(instance=registerInfo, schema=registerInfoSchema)
     except jsonschema.exceptions.ValidationError as e:
         error.append(e.message)
-    
-# TODO: Implement this    
+      
 def VerifyPotRegisterValid(request, error):
     dict = request.body.decode("UTF-8")
     registerInfo = json.loads(dict)
@@ -35,6 +34,10 @@ def VerifyPotRegisterValid(request, error):
     try:
         pot = PotRegistry.objects.get(SerialID=registerInfo["SerialID"])
     except Exception as e:
+        error.append("Invalid pot information")
+        return
+    
+    if pot.Key != registerInfo['Key']:
         error.append("Invalid pot information")
         return
     
