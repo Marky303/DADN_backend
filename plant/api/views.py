@@ -43,8 +43,10 @@ def RegisterPot(request):
         error = []
         
         VerifyPotRegisterInfo(request, error)
-        pot = VerifyPotRegisterValid(request, error)
+        if error:
+            raise Exception()
         
+        pot = VerifyPotRegisterValid(request, error)
         if error:
             raise Exception()
         

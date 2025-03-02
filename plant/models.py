@@ -3,16 +3,15 @@ import string
 from django.db import models
 from account.models import Account
 
-# TODO: Implement function to randomize key
 def GeneratePotKey():
-    return "XXXX-XXXX-XXXX"
+    charset = string.ascii_uppercase + string.digits
+    return "-".join("".join(random.choice(charset) for _ in range(4)) for _ in range(3))
 
-# TODO: Function to randomize Name???
 class PotRegistry(models.Model):
     # Normal fields
-    Name        = models.CharField(max_length=50, blank=False, null=False, default="My goofy ahh plant pot")
+    Name        = models.CharField(max_length=50, blank=False, null=False, default="Smart Plant Pot")
     SerialID    = models.CharField(max_length=20, blank=False, null=False, unique=True, editable=False)
-    Key         = models.CharField(max_length=14, blank=False, null=False, editable=False, default=GeneratePotKey)
+    Key         = models.CharField(max_length=14, blank=False, null=False, editable=False, default="XXXX-XXXX-XXXX")
     
     # Foreign keys
     Account     = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True)

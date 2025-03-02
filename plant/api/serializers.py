@@ -5,4 +5,4 @@ from plant.models import *
 class PotRegistrySerializer(ModelSerializer):
     class Meta:
         model = PotRegistry
-        fields = ("id", "Name", "SerialID")
+        fields = ("id", "Name", "SerialID", "Key")
