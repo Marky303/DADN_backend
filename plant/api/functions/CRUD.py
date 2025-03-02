@@ -4,16 +4,21 @@ from plant.models import *
 
 from plant.modules.firestoreTools import FireStoreClient
 
+def GeneratePotKey():
+    charset = string.ascii_uppercase + string.digits
+    return "-".join("".join(random.choice(charset) for _ in range(4)) for _ in range(3))
+
 def InitPotCRUD(request):
-    SerialID    =  FireStoreClient.InitPotDocuments()
-    newPot      = PotRegistry(SerialID=SerialID)
+    Key         = GeneratePotKey()
+    SerialID    = FireStoreClient.InitPotDocuments(Key)
+    newPot      = PotRegistry(SerialID=SerialID, Key=Key)
     newPot.save()
     
-    FireStoreClient.Notify(SerialID, "Pot has been registered")
-    
-    return SerialID, newPot.Key
+    return SerialID, Key
 
 def RegisterPotCRUD(request, pot):
+    FireStoreClient.Notify(pot.SerialID, "Pot has been registered")
+    
     pot.Account = request.user
     pot.save()
     
