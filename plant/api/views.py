@@ -81,3 +81,96 @@ def GetAllPots(request):
             error.append(str(e))
         print(error)
         return ResponseError(error)
+    
+# Create a new plan
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def CreatePlan(request):
+    try:
+        error = []
+        
+        VerifyPlanInformation(request, error)
+        
+        if error:
+            raise Exception()
+        
+        CreatePlanCRUD(request)
+        
+        return ResponseSuccessful("New plan created successfully")
+        
+    except Exception as e:
+        # Response a error code and error content        
+        if str(e):
+            print(str(e))
+            error.append(str(e))
+        print(error)
+        return ResponseError(error)
+
+# Edit an existing plan
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def EditPlan(request):
+    try:
+        error = []
+        
+        VerifyPlanOwnership(request)
+        VerifyPlanInformation(request, error)
+        
+        if error:
+            raise Exception()
+        
+        EditPlanCRUD(request)
+        
+        return ResponseSuccessful("Plan edited successfully")
+        
+    except Exception as e:
+        # Response a error code and error content        
+        if str(e):
+            print(str(e))
+            error.append(str(e))
+        print(error)
+        return ResponseError(error)
+
+# Get a user's plans
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def GetAllPlans(request):
+    try:
+        error = []
+        
+        plans = GetAllPlansCRUD(request)
+        
+        serializer = PlanSerializer(plans, many=True)
+        
+        return ResponseList(serializer.data, 1)
+    except Exception as e:
+        # Response a error code and error content        
+        if str(e):
+            print(str(e))
+            error.append(str(e))
+        print(error)
+        return ResponseError(error)
+    
+# Edit an existing plan
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def DeletePlan(request):
+    try:
+        error = []
+        
+        VerifyPlanOwnership(request)
+        
+        if error:
+            raise Exception()
+        
+        DeletePlanCRUD(request)
+        
+        return ResponseSuccessful("Plan deleted successfully")
+        
+    except Exception as e:
+        # Response a error code and error content        
+        if str(e):
+            print(str(e))
+            error.append(str(e))
+        print(error)
+        return ResponseError(error)

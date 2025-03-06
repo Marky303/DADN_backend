@@ -14,12 +14,12 @@ def VerifyPotRegisterInfo(request, error):
     registerInfo = json.loads(dict)
     
     registerInfoSchema = {
-    "type": "object",
-    "properties": {
-        "SerialID":     {"type": "string", "pattern": "^[A-Za-z0-9]{20}$"},
-        "Key":          {"type": "string", "pattern": "^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$"},
+        "type": "object",
+        "properties": {
+            "SerialID":     {"type": "string", "pattern": "^[A-Za-z0-9]{20}$"},
+            "Key":          {"type": "string", "pattern": "^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$"},
         },
-    "required": ["SerialID", "Key"]
+        "required": ["SerialID", "Key"]
     }   
     
     try:
@@ -46,4 +46,106 @@ def VerifyPotRegisterValid(request, error):
         return
     
     return pot
+
+def VerifyPlanOwnership(request):
+    dict = request.body.decode("UTF-8")
+    planInfo = json.loads(dict)
+    
+    planID = planInfo["planID"]
+    plan = Plan.objects.get(id=planID)
+    if plan.Account != request.user:
+        raise Exception("This plan is not yours")
+
+def VerifyPlanInformation(request, error):
+    dict = request.body.decode("UTF-8")
+    planInfo = json.loads(dict)
+    
+    planInfoSchema = {
+        "type": "object",
+        "properties": {
+            "Name": {"type": "string"},
+            "PlantType": {"type": "string"},
+            "StatRanges": {
+                "type": "object",
+                "properties": {
+                    "Temperature": {
+                        "type": "object",
+                        "properties": {
+                            "min": {"type": "number"},
+                            "max": {"type": "number"}
+                        },
+                        "required": ["min", "max"]
+                    },
+                    "Moisture": {
+                        "type": "object",
+                        "properties": {
+                            "min": {"type": "number"},
+                            "max": {"type": "number"}
+                        },
+                        "required": ["min", "max"]
+                    },
+                    "SoilHumidity": {
+                        "type": "object",
+                        "properties": {
+                            "min": {"type": "number"},
+                            "max": {"type": "number"}
+                        },
+                        "required": ["min", "max"]
+                    },
+                    "Light": {
+                        "type": "object",
+                        "properties": {
+                            "min": {"type": "number"},
+                            "max": {"type": "number"}
+                        },
+                        "required": ["min", "max"]
+                    }
+                },
+                "required": ["Temperature", "Moisture", "SoilHumidity", "Light"]
+            },
+            "Irrigation": {
+                "type": "object",
+                "properties": {
+                    "Schedules": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "Time": {"type": "string", "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$"},
+                                "TargetSoilHumidity": {"type": "number"}
+                            },
+                            "required": ["Time", "TargetSoilHumidity"]
+                        }
+                    },
+                    "Conditions": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "TargetStat": {
+                                    "type": "string",
+                                    "enum": ["Temperature", "Moisture", "SoilHumidity", "Light"]
+                                },
+                                "Type": {
+                                    "type": "string",
+                                    "enum": ["Increasing", "Decreasing"]
+                                },
+                                "TargetValue": {"type": "number"},
+                                "TargetSoilHumidity": {"type": "number"}
+                            },
+                            "required": ["TargetStat", "TargetValue", "TargetSoilHumidity"]
+                        }
+                    }
+                },
+                "required": ["Schedules", "Conditions"]
+            }
+        },
+        "required": ["Name", "PlantType", "StatRanges", "Irrigation"]
+    }
+   
+    
+    try:
+        validate(instance=planInfo, schema=planInfoSchema)
+    except jsonschema.exceptions.ValidationError as e:
+        error.append(e.message)
     

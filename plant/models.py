@@ -26,7 +26,7 @@ class PotRegistry(models.Model):
 class Plan(models.Model):
     # Normal fields
     Name        = models.CharField(max_length=50,  blank=False, null=False, default="My plant plan")
-    JSON        = models.CharField(max_length=255, blank=False, null=False, default="Some JSON")   
+    JSON        = models.CharField(max_length=1000, blank=False, null=False, default="Some JSON")   
     
     # Foreign keys
     Account     = models.ForeignKey(Account, on_delete=models.CASCADE, null=True)

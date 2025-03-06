@@ -1,5 +1,7 @@
 import json
 
+from django.db.models import Q
+
 from plant.models import *
 
 from plant.modules.firestoreTools import FireStoreClient
@@ -14,6 +16,8 @@ def InitPotCRUD(request):
     newPot      = PotRegistry(SerialID=SerialID, Key=Key)
     newPot.save()
     
+    FireStoreClient.Notify(SerialID, "Pot has been manufactured")
+    
     return SerialID, Key
 
 def RegisterPotCRUD(request, pot):
@@ -24,3 +28,36 @@ def RegisterPotCRUD(request, pot):
     
 def GetAllPotCRUD(request):
     return PotRegistry.objects.filter(Account=request.user)
+
+def CreatePlanCRUD(request):
+    dict = request.body.decode("UTF-8")
+    planInfo = json.loads(dict)
+    
+    planName = planInfo["Name"]
+    planJSONstring = json.dumps(planInfo)  
+    
+    newPlan = Plan(Name=planName, JSON=planJSONstring, Account=request.user)
+    newPlan.save()
+    
+def EditPlanCRUD(request):
+    dict = request.body.decode("UTF-8")
+    planInfo = json.loads(dict)
+    
+    planID = planInfo.pop("planID", None)
+    planName = planInfo["Name"]
+    planJSONstring = json.dumps(planInfo)  
+    
+    plan = Plan.objects.get(id=planID)
+    plan.Name = planName
+    plan.JSON = planJSONstring
+    plan.save()
+
+def GetAllPlansCRUD(request):
+    return Plan.objects.filter(Q(Account=request.user) | Q(Account=None))
+    
+def DeletePlanCRUD(request):
+    dict = request.body.decode("UTF-8")
+    planInfo = json.loads(dict)
+    planID = planInfo["planID"]
+    plan = Plan.objects.get(id=planID)
+    plan.delete()
