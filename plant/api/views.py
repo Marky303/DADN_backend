@@ -5,9 +5,9 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import *
 
 # Import functions
-from .Functions.verify import *
-from .Functions.response import *
-from .Functions.CRUD import *
+from .functions.verify import *
+from .functions.response import *
+from .functions.CRUD import *
 
 
 # Manufacture/Init a new pot
