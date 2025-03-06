@@ -95,7 +95,7 @@ class FireStoreClient:
         notification["id"] = cls.GetNextNotificationId(notificationRef)  
         
         notificationRef.update({
-            "Log": firestore.ArrayUnion([notification])
+            "Logs": firestore.ArrayUnion([notification])
         })
 
     # ADMIN FUNCTIONS

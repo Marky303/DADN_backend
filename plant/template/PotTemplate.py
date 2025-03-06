@@ -47,7 +47,12 @@ planDataTemplate = {
                                 { "Time": "06:00", "TargetSoilHumidity": 50 },
                             ],
                             "Conditions": [
-                                { "TargetStat": "SoilHumidity", "TargetValue": 30, "TargetSoilHumidity": 50},
+                                { 
+                                    "TargetStat": "SoilHumidity", 
+                                    "TargetValue": 30, 
+                                    "TargetSoilHumidity": 50, 
+                                    "Type": "Increasing"
+                                },
                             ]
                         }
                     }
