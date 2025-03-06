@@ -11,6 +11,8 @@ urlpatterns = [
     # Plant related endpoints
     path('register/', views.RegisterPot),
     path('getallpots/', views.GetAllPots),
+    path('applysettings/', views.ApplySettings),
+    path('disownpot/', views.DisownPot),
     
     # Plan related endpoints
     path('createplan/', views.CreatePlan),

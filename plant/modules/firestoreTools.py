@@ -5,6 +5,7 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 from django.conf import settings
+import json
 
 from plant.template.PotTemplate import *
 
@@ -143,7 +144,11 @@ class FireStoreClient:
             cls.forceDeleteCollection(col)
         print("Nuked everything")
                     
-    
+    @classmethod
+    def ApplyPlan(cls, serialID, JSON, Key):
+        db = cls._getFireStoreClient()
 
+        planTemplate['Key'] = Key
+        planTemplate['Plan'] = json.loads(JSON)
         
-    
+        db.collection(cls._plantPlanCollectionName).document(serialID).set(planTemplate)

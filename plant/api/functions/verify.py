@@ -55,6 +55,15 @@ def VerifyPlanOwnership(request):
     plan = Plan.objects.get(id=planID)
     if plan.Account != request.user:
         raise Exception("This plan is not yours")
+    
+def VerifyPotOwnership(request):
+    dict = request.body.decode("UTF-8")
+    potInfo = json.loads(dict)
+    
+    potID = potInfo['potID']
+    pot = PotRegistry.objects.get(id=potID)
+    if pot.Account != request.user:
+        raise Exception("This pot is not yours")
 
 def VerifyPlanInformation(request, error):
     dict = request.body.decode("UTF-8")

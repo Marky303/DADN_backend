@@ -174,3 +174,50 @@ def DeletePlan(request):
             error.append(str(e))
         print(error)
         return ResponseError(error)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def ApplySettings(request):
+    try:
+        error = []
+        
+        VerifyPlanOwnership(request)
+        VerifyPotOwnership(request)
+        
+        if error:
+            raise Exception()
+        
+        ApplySettingsCRUD(request)
+        
+        return ResponseSuccessful("Settings applied successfully")
+        
+    except Exception as e:
+        # Response a error code and error content        
+        if str(e):
+            print(str(e))
+            error.append(str(e))
+        print(error)
+        return ResponseError(error)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def DisownPot(request):
+    try:
+        error = []
+        
+        VerifyPotOwnership(request)
+        
+        if error:
+            raise Exception()
+        
+        DisownPotCRUD(request)
+        
+        return ResponseSuccessful("Disowned pot successfully")
+        
+    except Exception as e:
+        # Response a error code and error content        
+        if str(e):
+            print(str(e))
+            error.append(str(e))
+        print(error)
+        return ResponseError(error)
