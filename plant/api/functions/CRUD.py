@@ -61,3 +61,22 @@ def DeletePlanCRUD(request):
     planID = planInfo["planID"]
     plan = Plan.objects.get(id=planID)
     plan.delete()
+    
+def ApplySettingsCRUD(request):
+    dict = request.body.decode("UTF-8")
+    settingsInfo = json.loads(dict)
+    
+    pot = PotRegistry.objects.get(id=settingsInfo['potID'])
+    pot.Name = settingsInfo['Name']
+    pot.save()
+    
+    plan = Plan.objects.get(id=settingsInfo['planID'])
+    FireStoreClient.ApplyPlan(pot.SerialID, plan.JSON, pot.Key)
+    
+def DisownPotCRUD(request):
+    dict = request.body.decode("UTF-8")
+    potInfo = json.loads(dict)
+    
+    pot = PotRegistry.objects.get(id=potInfo['potID'])
+    pot.Account = None
+    pot.save()
