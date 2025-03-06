@@ -64,6 +64,16 @@ def VerifyPotOwnership(request):
     pot = PotRegistry.objects.get(id=potID)
     if pot.Account != request.user:
         raise Exception("This pot is not yours")
+    
+def VerifyPotOwnershipDisown(request):
+    dict = request.body.decode("UTF-8")
+    potInfo = json.loads(dict)
+    
+    serialID = potInfo['serialID']
+    pot = PotRegistry.objects.get(SerialID=serialID)
+    if pot.Account != request.user:
+        raise Exception("This pot is not yours")
+    return pot.id
 
 def VerifyPlanInformation(request, error):
     dict = request.body.decode("UTF-8")

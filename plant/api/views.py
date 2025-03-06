@@ -205,12 +205,12 @@ def DisownPot(request):
     try:
         error = []
         
-        VerifyPotOwnership(request)
+        potID = VerifyPotOwnershipDisown(request)
         
         if error:
             raise Exception()
         
-        DisownPotCRUD(request)
+        DisownPotCRUD(potID)
         
         return ResponseSuccessful("Disowned pot successfully")
         

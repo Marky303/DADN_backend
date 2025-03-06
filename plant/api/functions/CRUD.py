@@ -73,10 +73,7 @@ def ApplySettingsCRUD(request):
     plan = Plan.objects.get(id=settingsInfo['planID'])
     FireStoreClient.ApplyPlan(pot.SerialID, plan.JSON, pot.Key)
     
-def DisownPotCRUD(request):
-    dict = request.body.decode("UTF-8")
-    potInfo = json.loads(dict)
-    
-    pot = PotRegistry.objects.get(id=potInfo['potID'])
+def DisownPotCRUD(potID):    
+    pot = PotRegistry.objects.get(id=potID)
     pot.Account = None
     pot.save()
