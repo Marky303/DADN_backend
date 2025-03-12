@@ -221,3 +221,25 @@ def DisownPot(request):
             error.append(str(e))
         print(error)
         return ResponseError(error)
+    
+# Plant related entries
+@api_view(['POST'])
+def AddTemperatureEntry(request):
+    try:
+        error = []
+        
+        
+        if error:
+            raise Exception()
+        
+        AddTemperatureCRUD(request)
+        
+        return ResponseSuccessful("Saved temperature")
+        
+    except Exception as e:
+        # Response a error code and error content        
+        if str(e):
+            print(str(e))
+            error.append(str(e))
+        print(error)
+        return ResponseError(error)

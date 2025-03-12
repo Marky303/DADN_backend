@@ -152,3 +152,9 @@ class FireStoreClient:
         planTemplate['Plan'] = json.loads(JSON)
         
         db.collection(cls._plantPlanCollectionName).document(serialID).set(planTemplate)
+        
+    @classmethod
+    def addTemperatureEntry(cls, entry, serialID):        
+        db = cls._getFireStoreClient()
+        
+        db.collection(cls._plantTemperatureCollectionName).document(serialID).collection('Logs').add(entry)

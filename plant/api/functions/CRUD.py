@@ -77,3 +77,15 @@ def DisownPotCRUD(potID):
     pot = PotRegistry.objects.get(id=potID)
     pot.Account = None
     pot.save()
+    
+def AddTemperatureCRUD(request):
+    dict = request.body.decode("UTF-8")
+    entryInfo = json.loads(dict)
+    
+    serialID = entryInfo['SerialID']
+    template = {
+        "Time": entryInfo['Time'],
+        "Value": entryInfo['Value']
+    }
+    
+    FireStoreClient.addTemperatureEntry(template, serialID)

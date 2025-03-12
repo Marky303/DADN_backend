@@ -19,4 +19,7 @@ urlpatterns = [
     path('getallplans/', views.GetAllPlans),
     path('editplan/', views.EditPlan),
     path('deleteplan/', views.DeletePlan),
+    
+    # Plant 
+    path('temp/', views.AddTemperatureEntry),
 ]
