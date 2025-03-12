@@ -81,7 +81,6 @@ class FireStoreClient:
         doc = notificationRef.get()
         if doc.exists:
             currentLog = doc.to_dict().get("Logs", [])
-            print(currentLog)
             nextID = str(len(currentLog) + 1)
         return nextID
     
@@ -154,7 +153,56 @@ class FireStoreClient:
         db.collection(cls._plantPlanCollectionName).document(serialID).set(planTemplate)
         
     @classmethod
+    def checkStatRange(cls, statType, value, serialID):        
+        db = cls._getFireStoreClient()
+        
+        plan_ref = db.collection(cls._plantPlanCollectionName).document(serialID).get()
+        plan = plan_ref.to_dict()
+        statRanges = plan['Plan']['StatRanges']
+        range = statRanges[statType]
+        
+        if value > range['max']:
+            content = statType + " is too high!"
+            cls.Notify(serialID, content, 'warning')
+        if value < range['min']:
+            content = statType + " is too low!"
+            cls.Notify(serialID, content, 'warning')
+        
+        
+        
+    @classmethod
     def addTemperatureEntry(cls, entry, serialID):        
         db = cls._getFireStoreClient()
         
+        cls.checkStatRange('Temperature', entry['Value'], serialID)
         db.collection(cls._plantTemperatureCollectionName).document(serialID).collection('Logs').add(entry)
+        
+
+    @classmethod
+    def addMoistureEntry(cls, entry, serialID):        
+        db = cls._getFireStoreClient()
+        
+        cls.checkStatRange('Moisture', entry['Value'], serialID)
+        db.collection(cls._plantMoistureCollectionName).document(serialID).collection('Logs').add(entry)
+
+    @classmethod
+    def addLightEntry(cls, entry, serialID):        
+        db = cls._getFireStoreClient()
+        
+        cls.checkStatRange('Light', entry['Value'], serialID)
+        db.collection(cls._plantLightCollectionName).document(serialID).collection('Logs').add(entry)
+
+    @classmethod
+    def addSoilHumidityEntry(cls, entry, serialID):        
+        db = cls._getFireStoreClient()
+        
+        cls.checkStatRange('SoilHumidity', entry['Value'], serialID)
+        db.collection(cls._plantSoilHumidityCollectionName).document(serialID).collection('Logs').add(entry)
+        
+    @classmethod
+    def getPlan(cls, serialID):        
+        db = cls._getFireStoreClient()
+        
+        planRef = db.collection(cls._plantPlanCollectionName).document(serialID).get()
+        plan = planRef.to_dict()
+        return plan['Plan']

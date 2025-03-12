@@ -21,5 +21,6 @@ urlpatterns = [
     path('deleteplan/', views.DeletePlan),
     
     # Plant 
-    path('temp/', views.AddTemperatureEntry),
+    path('addentry/', views.AddTemperatureEntry),
+    path('getplan/', views.GetPlan),
 ]

@@ -234,7 +234,28 @@ def AddTemperatureEntry(request):
         
         AddTemperatureCRUD(request)
         
-        return ResponseSuccessful("Saved temperature")
+        return ResponseNoContent()
+        
+    except Exception as e:
+        # Response a error code and error content        
+        if str(e):
+            print(str(e))
+            error.append(str(e))
+        print(error)
+        return ResponseError(error)
+    
+@api_view(['POST'])
+def GetPlan(request):
+    try:
+        error = []
+        
+        
+        if error:
+            raise Exception()
+        
+        plan = GetPlanCRUD(request)
+        
+        return ResponseObject(plan)
         
     except Exception as e:
         # Response a error code and error content        

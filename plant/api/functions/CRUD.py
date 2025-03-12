@@ -5,6 +5,7 @@ from django.db.models import Q
 from plant.models import *
 
 from plant.modules.firestoreTools import FireStoreClient
+from datetime import datetime
 
 def GeneratePotKey():
     charset = string.ascii_uppercase + string.digits
@@ -15,8 +16,6 @@ def InitPotCRUD(request):
     SerialID    = FireStoreClient.InitPotDocuments(Key)
     newPot      = PotRegistry(SerialID=SerialID, Key=Key)
     newPot.save()
-    
-    FireStoreClient.Notify(SerialID, "Pot has been manufactured")
     
     return SerialID, Key
 
@@ -80,12 +79,28 @@ def DisownPotCRUD(potID):
     
 def AddTemperatureCRUD(request):
     dict = request.body.decode("UTF-8")
-    entryInfo = json.loads(dict)
+    entryInfo = json.loads(dict)['data']
     
     serialID = entryInfo['SerialID']
-    template = {
-        "Time": entryInfo['Time'],
-        "Value": entryInfo['Value']
-    }
     
+    template = {
+        "Time": datetime.now().timestamp(),
+        "Value": entryInfo['temperature']
+    }
     FireStoreClient.addTemperatureEntry(template, serialID)
+    
+    template['Value'] = entryInfo['light']
+    FireStoreClient.addLightEntry(template, serialID)
+    
+    template['Value'] = entryInfo['moisture']
+    FireStoreClient.addMoistureEntry(template, serialID)
+    
+    template['Value'] = entryInfo['soilHumidity']
+    FireStoreClient.addSoilHumidityEntry(template, serialID)
+    
+def GetPlanCRUD(request):
+    dict = request.body.decode("UTF-8")
+    info = json.loads(dict)
+    serialID = info['SerialID']
+    
+    return FireStoreClient.getPlan(serialID)

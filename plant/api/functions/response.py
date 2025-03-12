@@ -3,6 +3,9 @@ from rest_framework import status
 
 
 # Response if the action was successsful
+def ResponseNoContent():
+    return Response(status=status.HTTP_200_OK)
+
 def ResponseSuccessful(content, status=status.HTTP_200_OK):
     content = {'detail': content}
     return Response(content, status=status)
