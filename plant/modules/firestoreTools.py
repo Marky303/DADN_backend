@@ -22,7 +22,7 @@ class FireStoreClient:
     @classmethod
     def _getFireStoreClient(cls):
         if cls._db is None:
-            cred = credentials.Certificate(str(settings.BASE_DIR) + "\\firebase_key.json")
+            cred = credentials.Certificate(str(settings.BASE_DIR) + "/firebase_key.json")
             firebase_admin.initialize_app(cred)
             cls._db = firestore.client()
         return cls._db
