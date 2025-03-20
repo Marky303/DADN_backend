@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-scsxw6$cwah_s)gzn4w!$^mkdezc5v8kzr47t@=q))lgr6mmfo
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['dadn-backend.vercel.app', 'localhost']
+ALLOWED_HOSTS = ['dadn-backend.vercel.app', 'dadn-backend-git-nhhhvercel-markstanleys-projects.vercel.app', 'localhost']
 
 # Application definition
 INSTALLED_APPS = [
