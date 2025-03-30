@@ -147,10 +147,11 @@ def VerifyPlanInformation(request, error):
                                 },
                                 "Type": {
                                     "type": "string",
-                                    "enum": ["Increasing", "Decreasing"]
+                                    "enum": [">", "<"]
                                 },
                                 "TargetValue": {"type": "number"},
-                                "TargetSoilHumidity": {"type": "number"}
+                                "TargetSoilHumidity": {"type": "number"},
+                                "Cooldown": {"type": "number"}
                             },
                             "required": ["TargetStat", "TargetValue", "TargetSoilHumidity"]
                         }

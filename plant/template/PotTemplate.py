@@ -51,7 +51,8 @@ planDataTemplate = {
                                     "TargetStat": "SoilHumidity", 
                                     "TargetValue": 30, 
                                     "TargetSoilHumidity": 50, 
-                                    "Type": "Increasing"
+                                    "Type": ">",
+                                    "Cooldown": 7200
                                 },
                             ]
                         }
