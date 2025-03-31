@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     
     # Apps
     'account',
-    'plant'
+    'plant',
+    'assistant'
 ]
 
 MIDDLEWARE = [
