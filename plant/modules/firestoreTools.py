@@ -217,16 +217,7 @@ class FireStoreClient:
         
         resultTemplate = {
                             "Token": 0,
-                            "History": [
-                                {
-                                    "role": "model",
-                                    "parts": [
-                                        {
-                                            "text": "Hello! How can i help you today?"
-                                        }
-                                    ]
-                                }
-                            ]
+                            "History": []
                         }
         update_time, chatRef = db.collection(cls._chatCollectionName).add(resultTemplate)
         

@@ -16,3 +16,8 @@ def RegisterPotCRUD(request, pot):
         pot.save()
     except Exception as e:
         raise Exception("Error")
+    
+def GetAllPotsCRUD(request):
+    user = request.user
+    pots = PotRegistry.objects.filter(Account=user)
+    return pots
