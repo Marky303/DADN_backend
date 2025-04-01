@@ -18,35 +18,41 @@ from .functions.CRUD import *
 def Chat(request):
     try:
         error = []
-        query = getUserQueryFromRequest(request)
+        query, documentID = getParamsFromRequest(request)
         if error:
             raise Exception()
         
         # Create new document
-        documentID, history = FireStoreClient.createChatDocument()
-        
+        if documentID is None:
+            documentID, history = FireStoreClient.createChatDocument()
+        else:
+            history = FireStoreClient.getChatHistory(documentID)
+            
         # Progress chat history
-        chat = GeminiController(query, history)
+        chat = GeminiController(query, history, request)
         
         # Save the new chat history
         FireStoreClient.saveChatHistory(chat, documentID)
-        
+
         return ResponseObject({"documentID": documentID})
           
     except Exception as exception:
         return errorHandling(exception, error)    
 
 # Helper functions
-def getUserQueryFromRequest(request):
+def getParamsFromRequest(request):
     requestBodyUnicode  = request.body.decode("UTF-8")
     requestDictionary   = json.loads(requestBodyUnicode)
-    userQuery           = requestDictionary['query']
-    return userQuery
+    query               = requestDictionary['query']
+    try:
+        documentID      = requestDictionary['documentID']
+    except Exception as e:
+        documentID      = None
+    return query, documentID
 
 def errorHandling(exception, error):
     if str(exception): error.append(str(exception))
     return ResponseError(error) 
-
 
 
 # API for testing
@@ -55,7 +61,7 @@ def errorHandling(exception, error):
 def TEST(request):
     try:
         error = []
-        query = getUserQueryFromRequest(request)
+        query, documentID = getParamsFromRequest(request)
         if error:
             raise Exception()
         
