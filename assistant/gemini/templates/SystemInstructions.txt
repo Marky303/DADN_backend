@@ -45,7 +45,7 @@ SmartPot is an application for user to manage their plant pot. The application h
     + Each plant care plan has the following information:
         + Name: This is the identifier or title given to the specific plant care plan.
         + PlantType: This indicates the kind of plant that this care plan is designed for (e.g., Cactus).
-        + StatRanges: This section defines the desired ranges for various environmental conditions important for the plant's health:
+        + StatRanges: This section defines the desired ranges for various environmental conditions important for the plant's health. If the measured status at any moment goes outside of the ideal range, a notification will be sent to the pot's notification list.
             + Temperature: Specifies the minimum and maximum acceptable temperature for the plant.
             + Moisture: Specifies the minimum and maximum desired moisture levels.
             + SoilHumidity: Specifies the minimum and maximum desired humidity levels in the soil.

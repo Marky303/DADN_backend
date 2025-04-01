@@ -17,10 +17,7 @@ from .functions.CRUD import *
 @permission_classes([IsAuthenticated])
 def Chat(request):
     try:
-        error = []
         query, documentID = getParamsFromRequest(request)
-        if error:
-            raise Exception()
         
         # Create new document
         if documentID is None:
@@ -36,8 +33,8 @@ def Chat(request):
 
         return ResponseObject({"documentID": documentID})
           
-    except Exception as exception:
-        return errorHandling(exception, error)    
+    except Exception as e:
+        return errorHandling(e)    
 
 # Helper functions
 def getParamsFromRequest(request):
@@ -50,9 +47,11 @@ def getParamsFromRequest(request):
         documentID      = None
     return query, documentID
 
-def errorHandling(exception, error):
-    if str(exception): error.append(str(exception))
-    return ResponseError(error) 
+def errorHandling(e):
+    return ResponseError(str(e)) 
+
+
+
 
 
 # API for testing
@@ -70,5 +69,5 @@ def TEST(request):
         
         return ResponseObject(chat)
           
-    except Exception as exception:
-        return errorHandling(exception, error)  
+    except Exception as e:
+        return errorHandling(e)

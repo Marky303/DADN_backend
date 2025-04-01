@@ -28,3 +28,12 @@ def VerifyPotRegisterValid(serialID, key):
         raise Exception("Pot has already been registered")
     
     return pot
+
+def VerifyPotOwnership(request, serialID):
+    try:
+        pot = PotRegistry.objects.get(SerialID=serialID)
+    except Exception as e:
+        raise Exception("Cannot find pot")
+    
+    if pot.Account != request.user:
+        raise Exception("This pot is not yours")

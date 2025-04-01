@@ -1,10 +1,12 @@
-from assistant.api.functions.verify import *
-from assistant.api.functions.CRUD import *
-
 from plant.api.functions.verify import *
 from plant.api.functions.CRUD import *
 
+from assistant.api.functions.verify import *
+from assistant.api.functions.CRUD import *
+
 from plant.api.serializers import *
+
+from plant.modules.firestoreTools import FireStoreClient
 
 # Controller
 def callFunction(part, request):
@@ -15,9 +17,12 @@ def callFunction(part, request):
     if functionCall["name"] == "register_pot":
         result = register_pot(request, **functionCall["args"])
         
-    if functionCall["name"] == "get_all_user_pots":
-        result = get_all_user_pots(request)
+    if functionCall["name"] == "find_user_pots":
+        result = find_user_pots(request, **functionCall["args"])
         
+    if functionCall["name"] == "get_pot_status":
+        result = get_pot_status(request, **functionCall["args"])    
+    
     # Template
     if functionCall["name"] == "something_function":
         result = None
@@ -42,11 +47,18 @@ def register_pot(request, serialID, key):
     except Exception as e:
         return errorHandling(e)
     
-def get_all_user_pots(request):
+def find_user_pots(request, name, serialID):
     try:
-        pots = GetAllPotCRUD(request)
+        pots = FindPotsCRUD(request, name, serialID)
         serializer = PotRegistrySerializer(pots, many=True)
         return {"list": serializer.data}
+    except Exception as e:
+        return errorHandling(e)
+    
+def get_pot_status(request, serialID):
+    try:
+        VerifyPotOwnership(request, serialID)
+        return FireStoreClient.getPotStatus(serialID)
     except Exception as e:
         return errorHandling(e)
     
