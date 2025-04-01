@@ -208,6 +208,42 @@ class FireStoreClient:
         plan = planRef.to_dict()
         return plan['Plan']
 
+    @staticmethod
+    def getLatestValue(db, collection, serialID):
+        statRef = db.collection(collection).document(serialID).get()
+
+        log_query = (
+            statRef.reference.collection("Logs")
+            .order_by("Time", direction=firestore.Query.DESCENDING)
+            .limit(1)
+        )
+        log_docs = log_query.stream()
+
+        latest_log = next(log_docs, None)
+        if latest_log and latest_log.exists:
+            log_data = latest_log.to_dict()
+            return log_data.get("Value")
+
+        return None
+
+    @classmethod
+    def getPotStatus(cls, serialID):
+        db = cls._getFireStoreClient()
+        
+        notificationRef = db.collection(cls._plantNotificationsCollectionName).document(serialID).get()
+        notifications = notificationRef.to_dict()
+        
+        statusTemplate = {
+            'Temperature': FireStoreClient.getLatestValue(db, cls._plantTemperatureCollectionName, serialID),
+            'Light': FireStoreClient.getLatestValue(db, cls._plantLightCollectionName, serialID),
+            'Moisture': FireStoreClient.getLatestValue(db, cls._plantMoistureCollectionName, serialID),
+            'SoilHumidity': FireStoreClient.getLatestValue(db, cls._plantSoilHumidityCollectionName, serialID),
+            'Notifications': notifications['Logs'],
+            'Plan': cls.getPlan(serialID)
+        }
+        
+        return statusTemplate
+
     # Document related
     _chatCollectionName = os.getenv("FIRESTORE_ASSISTANT_CHAT_COLLECTION")
     
