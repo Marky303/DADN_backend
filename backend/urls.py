@@ -13,4 +13,7 @@ urlpatterns = [
     
     # Plant management app
     path('plant/', include('plant.api.urls')),
+    
+    # Assistant
+    path('assistant/', include('assistant.api.urls')),
 ]

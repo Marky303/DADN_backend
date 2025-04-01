@@ -12,6 +12,7 @@ from plant.template.PotTemplate import *
 class FireStoreClient:
     _db = None
     
+    # Plant related
     _plantTemperatureCollectionName     = os.getenv("FIRESTORE_PLANT_TEMPERATURE_COLLECTION")
     _plantMoistureCollectionName        = os.getenv("FIRESTORE_PLANT_MOISTURE_COLLECTION")
     _plantSoilHumidityCollectionName    = os.getenv("FIRESTORE_PLANT_SOILHUMIDITY_COLLECTION")
@@ -206,3 +207,40 @@ class FireStoreClient:
         planRef = db.collection(cls._plantPlanCollectionName).document(serialID).get()
         plan = planRef.to_dict()
         return plan['Plan']
+
+    # Document related
+    _chatCollectionName = os.getenv("FIRESTORE_ASSISTANT_CHAT_COLLECTION")
+    
+    @classmethod
+    def createChatDocument(cls):        
+        db = cls._getFireStoreClient()
+        
+        resultTemplate = {
+                            "Token": 0,
+                            "History": [
+                                {
+                                    "role": "model",
+                                    "parts": [
+                                        {
+                                            "text": "Hello! How can i help you today?"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+        update_time, chatRef = db.collection(cls._chatCollectionName).add(resultTemplate)
+        
+        return chatRef.id, resultTemplate["History"]
+    
+    @classmethod
+    def getChatHistory(cls, documentID):
+        db = cls._getFireStoreClient()
+        
+        chatRef = db.collection(cls._chatCollectionName).document(documentID).get()
+        chat = chatRef.to_dict()
+        return chat['History']
+    
+    @classmethod
+    def saveChatHistory(cls, chat, documentID):
+        db = cls._getFireStoreClient()
+        db.collection(cls._chatCollectionName).document(documentID).set(chat)
