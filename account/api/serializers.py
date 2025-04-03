@@ -14,4 +14,4 @@ class UserCreateSerializer(UserCreateSerializer):
 class UserSerializer(ModelSerializer):
     class Meta:
         model = Account
-        fields = ("email", "Name", "PhoneNumber", "DateOfBirth", "Gender", "Address") 
+        fields = ("email", "Name", "PhoneNumber", "DateOfBirth", "Gender", "Address", "ImageBase64") 
