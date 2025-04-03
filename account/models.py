@@ -36,7 +36,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     Gender          = models.CharField(max_length=20, null=True, blank=True)
     Address         = models.CharField(max_length=50, null=True, blank=True)
     
-    ImageBase64     = models.TextField(null=True, blank=True)  
+    Avatar          = models.TextField(null=True, blank=True)  
     
     # Choosing email as username for login/signup
     USERNAME_FIELD = 'email'
