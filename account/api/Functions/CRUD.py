@@ -14,7 +14,7 @@ def UpdateUserInfoCRUD(request):
     currentUser.DateOfBirth = userInfo["DateOfBirth"]
     currentUser.Gender      = userInfo["Gender"]
     currentUser.Address     = userInfo["Address"]
-    currentUser.ImageBase64     = userInfo["ImageBase64"]
+    currentUser.Avatar      = userInfo["Avatar"]
     
     currentUser.save()
     
