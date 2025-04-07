@@ -47,13 +47,14 @@ def VerifyPotRegisterValid(request, error):
     
     return pot
 
-def VerifyPlanOwnership(request):
-    dict = request.body.decode("UTF-8")
-    planInfo = json.loads(dict)
-    
+def VerifyPlanOwnership(request, default=False):
+    body = request.body.decode("UTF-8")
+    planInfo = json.loads(body)
+
     planID = planInfo["planID"]
     plan = Plan.objects.get(id=planID)
-    if plan.Account != request.user:
+
+    if not (default and plan.Account is None) and plan.Account != request.user:
         raise Exception("This plan is not yours")
     
 def VerifyPotOwnership(request):

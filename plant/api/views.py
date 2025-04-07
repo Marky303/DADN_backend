@@ -181,7 +181,7 @@ def ApplySettings(request):
     try:
         error = []
         
-        VerifyPlanOwnership(request)
+        VerifyPlanOwnership(request, default=True)
         VerifyPotOwnership(request)
         
         if error:

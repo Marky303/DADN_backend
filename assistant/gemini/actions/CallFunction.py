@@ -22,6 +22,12 @@ def callFunction(part, request):
         
     if functionCall["name"] == "get_pot_status":
         result = get_pot_status(request, **functionCall["args"])    
+        
+    if functionCall["name"] == "create_plan":
+        result = create_plan(request, **functionCall["args"]) 
+        
+    if functionCall["name"] == "find_user_plans":
+        result = find_user_plans(request, **functionCall["args"]) 
     
     # Template
     if functionCall["name"] == "something_function":
@@ -62,6 +68,22 @@ def get_pot_status(request, serialID):
     except Exception as e:
         return errorHandling(e)
     
+def create_plan(request, plan):
+    try:
+        VerifyPlanInformation(plan)
+        CreatePlanCRUD(request, plan)        
+        return {"detail": "Successfully created plan"}
+    except Exception as e:    
+        return errorHandling(e)
+
+def find_user_plans(request, name):
+    try:
+        plans = FindPlansCRUD(request, name)
+        serializer = PlanSerializer(plans, many=True)
+        return {"list": serializer.data}
+    except Exception as e:    
+        return errorHandling(e)
+
 # Error handling
 def errorHandling(e):
     return {"error": str(e)}
