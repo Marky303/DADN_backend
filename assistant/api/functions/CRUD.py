@@ -29,3 +29,16 @@ def FindPotsCRUD(request, name, serialID):
     if serialID:
         filters &= Q(SerialID=serialID)  
     return PotRegistry.objects.filter(filters)
+
+def CreatePlanCRUD(request, plan):
+    planName = plan["Name"]
+    planJSONstring = json.dumps(plan)  
+    
+    newPlan = Plan(Name=planName, JSON=planJSONstring, Account=request.user)
+    newPlan.save()
+
+def FindPlansCRUD(request, name):
+    filters = Q(Account=request.user) | Q(Account=None)
+    if name:
+        filters &= Q(Name__icontains=name)
+    return Plan.objects.filter(filters)

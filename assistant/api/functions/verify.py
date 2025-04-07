@@ -37,3 +37,94 @@ def VerifyPotOwnership(request, serialID):
     
     if pot.Account != request.user:
         raise Exception("This pot is not yours")
+    
+def VerifyPlanInformation(plan):
+    planInfoSchema = {
+        "type": "object",
+        "properties": {
+            "Name": {"type": "string"},
+            "PlantType": {"type": "string"},
+            "StatRanges": {
+                "type": "object",
+                "properties": {
+                    "Temperature": {
+                        "type": "object",
+                        "properties": {
+                            "min": {"type": "number"},
+                            "max": {"type": "number"}
+                        },
+                        "required": ["min", "max"]
+                    },
+                    "Moisture": {
+                        "type": "object",
+                        "properties": {
+                            "min": {"type": "number"},
+                            "max": {"type": "number"}
+                        },
+                        "required": ["min", "max"]
+                    },
+                    "SoilHumidity": {
+                        "type": "object",
+                        "properties": {
+                            "min": {"type": "number"},
+                            "max": {"type": "number"}
+                        },
+                        "required": ["min", "max"]
+                    },
+                    "Light": {
+                        "type": "object",
+                        "properties": {
+                            "min": {"type": "number"},
+                            "max": {"type": "number"}
+                        },
+                        "required": ["min", "max"]
+                    }
+                },
+                "required": ["Temperature", "Moisture", "SoilHumidity", "Light"]
+            },
+            "Irrigation": {
+                "type": "object",
+                "properties": {
+                    "Schedules": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "Time": {"type": "string", "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$"},
+                                "TargetSoilHumidity": {"type": "number"}
+                            },
+                            "required": ["Time", "TargetSoilHumidity"]
+                        }
+                    },
+                    "Conditions": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "TargetStat": {
+                                    "type": "string",
+                                    "enum": ["Temperature", "Moisture", "SoilHumidity", "Light"]
+                                },
+                                "Type": {
+                                    "type": "string",
+                                    "enum": [">", "<"]
+                                },
+                                "TargetValue": {"type": "number"},
+                                "TargetSoilHumidity": {"type": "number"},
+                                "Cooldown": {"type": "number"}
+                            },
+                            "required": ["TargetStat", "TargetValue", "TargetSoilHumidity"]
+                        }
+                    }
+                },
+                "required": ["Schedules", "Conditions"]
+            }
+        },
+        "required": ["Name", "PlantType", "StatRanges", "Irrigation"]
+    }
+   
+    
+    try:
+        validate(instance=plan, schema=planInfoSchema)
+    except jsonschema.exceptions.ValidationError as e:
+        raise e

@@ -33,6 +33,7 @@ def GeminiController(query, history, request):
         }
         return chat
     except Exception as e:
+        print(e)
         raise e
     
 # Helper function
