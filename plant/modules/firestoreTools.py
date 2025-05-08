@@ -1,11 +1,15 @@
 import os
 from dotenv import load_dotenv
+from datetime import datetime
+from collections import defaultdict
 load_dotenv()
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 from django.conf import settings
 import json
+
+from plant.models import *
 
 from plant.template.PotTemplate import *
 
@@ -98,6 +102,123 @@ class FireStoreClient:
         notificationRef.update({
             "Logs": firestore.ArrayUnion([notification])
         })
+        
+    @classmethod
+    def GetAppliedPlanList(cls, serialIDList):
+        db = cls._getFireStoreClient()
+        
+        planList = []
+        
+        for serialID in serialIDList:
+            planRef = db.collection(cls._plantPlanCollectionName).document(serialID)
+            doc = planRef.get()
+            if doc.exists:
+                plan = doc.to_dict()
+                plan["plantId"] = doc.id
+                planList.append(plan)
+
+        return planList
+    
+    @classmethod
+    def GetUnhealthyPlants(cls, serialIDList):
+        db = cls._getFireStoreClient()
+        plantList = []
+
+        for serialID in serialIDList:
+            planRef = db.collection(cls._plantPlanCollectionName).document(serialID)
+            doc = planRef.get()
+            if not doc.exists:
+                continue
+
+            plan = doc.to_dict()
+            statRanges = plan['Plan']['StatRanges']
+            name = PotRegistry.objects.get(SerialID=doc.id).Name
+
+            # Get latest sensor values
+            temp = cls.getLatestValue(db, cls._plantTemperatureCollectionName, serialID)
+            light = cls.getLatestValue(db, cls._plantLightCollectionName, serialID)
+            moisture = cls.getLatestValue(db, cls._plantMoistureCollectionName, serialID)
+            soil = cls.getLatestValue(db, cls._plantSoilHumidityCollectionName, serialID)
+
+            def getStatus(value, min_val, max_val, labels):
+                if value is None:
+                    return "Unknown"
+                if value < min_val:
+                    return labels[0]
+                elif value > max_val:
+                    return labels[2]
+                else:
+                    return labels[1]
+
+            plant = {
+                "serialID": serialID,
+                "name": name,
+                "temp": getStatus(temp, statRanges["Temperature"]["min"], statRanges["Temperature"]["max"], ["Cold", "OK", "Hot"]),
+                "light": getStatus(light, statRanges["Light"]["min"], statRanges["Light"]["max"], ["Dark", "OK", "Bright"]),
+                "humidity": getStatus(soil, statRanges["SoilHumidity"]["min"], statRanges["SoilHumidity"]["max"], ["Dry", "OK", "Soggy"]),
+                "moisture": getStatus(moisture, statRanges["Moisture"]["min"], statRanges["Moisture"]["max"], ["Dry", "OK", "Saturated"]),
+            }
+
+            if any(plant[key] != "OK" for key in ["temp", "light", "humidity", "moisture"]):
+                plantList.append(plant)
+        return plantList
+
+    @classmethod
+    def GetDataSet(cls, serialIDList):
+        db = cls._getFireStoreClient()
+        
+        dateStats = defaultdict(lambda: {"OK": 0, "not_OK": 0})
+        
+        sensor_types = {
+            "Temperature": cls._plantTemperatureCollectionName,
+            "Moisture": cls._plantMoistureCollectionName,
+            "SoilHumidity": cls._plantSoilHumidityCollectionName,
+            "Light": cls._plantLightCollectionName,
+        }
+        
+        for serialID in serialIDList:
+            plan_doc = db.collection(cls._plantPlanCollectionName).document(serialID).get()
+            if not plan_doc.exists:
+                continue
+            stat_ranges = plan_doc.to_dict().get("Plan", {}).get("StatRanges", {})
+
+            for stat_name, collection_name in sensor_types.items():
+                range_min = stat_ranges.get(stat_name, {}).get("min")
+                range_max = stat_ranges.get(stat_name, {}).get("max")
+                if range_min is None or range_max is None:
+                    continue
+                
+                logs_ref = db.collection(collection_name).document(serialID).collection("Logs")
+                logs = logs_ref.stream()
+
+                for log in logs:
+                    data = log.to_dict()
+                    timestamp = data.get("Time")
+                    value = data.get("Value")
+                    
+                    if timestamp is None or value is None:
+                        continue
+                    
+                    date_str = datetime.fromtimestamp(timestamp).strftime("%d/%m/%Y")
+                    
+                    if range_min <= value <= range_max:
+                        dateStats[date_str]["OK"] += 1
+                    else:
+                        dateStats[date_str]["not_OK"] += 1
+        
+        # Convert counts into percentages
+        result = []
+        for date, stats in sorted(dateStats.items()):
+            total = stats["OK"] + stats["not_OK"]
+            if total == 0:
+                continue
+            result.append({
+                "date": date,
+                "OK": round((stats["OK"] / total) * 100),
+                "not_OK": round((stats["not_OK"] / total) * 100)
+            })
+
+        return result
 
     # ADMIN FUNCTIONS
     @classmethod

@@ -264,3 +264,24 @@ def GetPlan(request):
             error.append(str(e))
         print(error)
         return ResponseError(error)
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def GetDashboard(request):
+    try:
+        error = []
+        
+        if error:
+            raise Exception()
+        
+        dashboard = GetDashboardCRUD(request)
+        
+        return ResponseObject(dashboard)
+        
+    except Exception as e:
+        # Response a error code and error content        
+        if str(e):
+            print(str(e))
+            error.append(str(e))
+        print(error)
+        return ResponseError(error)
