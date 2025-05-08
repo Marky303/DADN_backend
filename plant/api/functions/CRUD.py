@@ -104,3 +104,77 @@ def GetPlanCRUD(request):
     serialID = info['SerialID']
     
     return FireStoreClient.getPlan(serialID)
+
+def GetDashboardCRUD(request):
+    return {
+            "listPlans": {
+                "before": [],
+                "after": []
+        },
+            "unhealthyPlants": [],
+            "dataset": []
+    }
+
+    
+    plantList = PotRegistry.objects.filter(Account=request.user)
+    plantSerialIDList = []
+    for plant in plantList:
+        plantSerialIDList.append(plant.SerialID)
+    
+    # planList
+    planList = FireStoreClient.GetAppliedPlanList(plantSerialIDList)
+    convertedPlanList = []
+    for plan in planList:
+        plantName = "None"
+        try:
+            plantName = PotRegistry.objects.get(SerialID=plan["plantId"]).Name
+        except:
+            pass
+        
+        for schedule in plan["Plan"]["Irrigation"]["Schedules"]:
+            convertedPlan = {
+                "id": plan["Key"],
+                "name": plan["Plan"]["Name"],
+                "type": plan["Plan"]["PlantType"],
+                "time": schedule["Time"],
+                "target": schedule["TargetSoilHumidity"],
+                "plants": [
+                    {
+                        "serialID": plan["plantId"],
+                        "name": plantName
+                    }
+                ]
+            }
+            convertedPlanList.append(convertedPlan)
+    
+    now = datetime.now().time()
+    before = []
+    after = []
+
+    for plan in convertedPlanList:
+        try:
+            plan_time = datetime.strptime(plan["time"], "%H:%M").time()
+            if plan_time <= now:
+                before.append(plan)
+            else:
+                after.append(plan)
+        except ValueError:
+            pass
+
+    before.sort(key=lambda p: datetime.strptime(p["time"], "%H:%M").time())
+    after.sort(key=lambda p: datetime.strptime(p["time"], "%H:%M").time())
+
+    # unhealthyPlants
+    unhealthyPlants = FireStoreClient.GetUnhealthyPlants(plantSerialIDList)
+
+    # dataset
+    dataset = FireStoreClient.GetDataSet(plantSerialIDList)
+
+    return {
+            "listPlans": {
+                "before": before,
+                "after": after
+        },
+            "unhealthyPlants": unhealthyPlants,
+            "dataset": [dataset[1:]]
+    }

@@ -20,6 +20,9 @@ urlpatterns = [
     path('editplan/', views.EditPlan),
     path('deleteplan/', views.DeletePlan),
     
+    # Dashboard
+    path('dashboard/', views.GetDashboard),
+    
     # Plant 
     path('addentry/', views.AddTemperatureEntry),
     path('getplan/', views.GetPlan),
