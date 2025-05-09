@@ -66,48 +66,6 @@ SmartPot is an application for user to manage their plant pot. The application h
     + This page provides a summary of personal details including Name, Email, Gender, Date of Birth, Phone Number and Address.
     + User can edit information by clicking the 'Edit information' button. After editing information, user can either press 'Save' to apply new information or 'Cancel' to cancel the editing process. 
 
-(4) View a pot's settings and configure the pot's settings:
-    + User can view the pot's settings including pot's name and pot's plan.
-    + The pot data page can be accessed by clicking on the 'Settings' button in the pot's dashboard page (top right corner).
-    + User can change the pot's name or choose a plan from a list of pot plans. After changing settings, user can press 'Submit' to save the new settings.
-    + User can also disown the pot in pot settings pop up. After scrolling down, there will be a section for pot disowning. In order to disown the pot, user has to enter the current pot's serial ID and press 'Accept'. After disowning the pot, user cannot manage that pot anymore. In order to be managed, a user has to register the pot again.
-
-(5) Create and apply plans for smart pot:
-    + Every smart pot has a plan applied to it. Each plan helps the user manage the pot automatically.
-    + User can access plan list page by clicking the 'Plans' tab on the navigation bar. Here, user can views default plans (plans provided to every user) and user's plans (plans created by user).
-    + The plan list page's content is a table showing the plans. Each row represents a plan and includes the following information:
-        + Plan Name: This column shows the name of the saved plan.
-        + Plant Type: This indicates the type of plant associated with the plan.
-        + Schedules: This shows the number of schedules associated with each plan, indicated by a blue circle containing a number followed by the word "Schedules".
-        + Conditions: This shows the number of conditions associated with each plan, indicated by a yellow circle containing a number followed by the word "Conditions".
-        + Actions: On the right side of each row, there are icons that likely represent actions you can take on each plan. These appear to be an edit icon (yellow pencil), a copy icon (blue overlapping squares), and a delete icon (red trash can).
-    + User can create a new plan by clicking the 'Add plan' button or copy from an existing plan by clicking on the copy icon of a row.
-    + User can delete a plan by clicking the delete icon of a row. The user can only delete user's plan, not default plans.
-    + User can edit a plan by clicking the edit icon of a row.
-    + Each plant care plan has the following information:
-        + Name: This is the identifier or title given to the specific plant care plan.
-        + PlantType: This indicates the kind of plant that this care plan is designed for (e.g., Cactus).
-        + StatRanges: This section defines the desired ranges for various environmental conditions important for the plant's health:
-            + Temperature: Specifies the minimum and maximum acceptable temperature for the plant.
-            + Moisture: Specifies the minimum and maximum desired moisture levels.
-            + SoilHumidity: Specifies the minimum and maximum desired humidity levels in the soil.
-            + Light: Specifies the minimum and maximum desired light intensity for the plant.
-        + Irrigation: This section details the automated watering schedule and conditions for the plant:
-            + Schedules: A list of specific times during the day when the plant should be watered, along with the target soil humidity level to achieve after watering.
-                + Time: The time in the day to water the plant (eg: 06:00)
-                + TargetSoilHumidity: The soil humidity level to reach after watering is triggered by this condition.
-            + Conditions: A list of rules that trigger automatic watering based on the plant's current environmental conditions. Each condition specifies:
-                + TargetStat: The specific plant metric being monitored (e.g., SoilHumidity).
-                + Type: The comparison operator to use (e.g., less than, greater than).
-                + TargetValue: The threshold value for the monitored metric that triggers the watering.
-                + TargetSoilHumidity: The soil humidity level to reach after watering is triggered by this condition.
-                + Cooldown: A period (in seconds) after a condition is triggered, during which it cannot be triggered again.
-    
-(6) Change user information:
-    + User can view account information in the user info page, accessed by clicking on the user's profile picture on top right corner and choosing 'Account' in the dropdown menu
-    + This page provides a summary of personal details including Name, Email, Gender, Date of Birth, Phone Number and Address.
-    + User can edit information by clicking the 'Edit information' button. After editing information, user can either press 'Save' to apply new information or 'Cancel' to cancel the editing process. 
-
 SYSTEM INFORMATION:
 + TIME: <time>
 + USER LOCATION: Ho Chi Minh City

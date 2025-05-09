@@ -1,0 +1,22 @@
+{
+  "Name": "(Copy) Default Rose plan",
+  "PlantType": "Rose",
+  "StatRanges": {
+    "Temperature": { "min": 25, "max": 30 },
+    "Light": { "min": 30, "max": 80 },
+    "SoilHumidity": { "min": 30, "max": 45 },
+    "Moisture": { "min": 65, "max": 75 }
+  },
+  "Irrigation": {
+    "Schedules": [{ "Time": "06:00", "TargetSoilHumidity": 40 }],
+    "Conditions": [
+      {
+        "TargetStat": "Temperature",
+        "Type": ">",
+        "TargetValue": 30,
+        "TargetSoilHumidity": 50,
+        "Cooldown": 7200
+      }
+    ]
+  }
+}

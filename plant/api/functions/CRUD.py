@@ -106,16 +106,15 @@ def GetPlanCRUD(request):
     return FireStoreClient.getPlan(serialID)
 
 def GetDashboardCRUD(request):
-    return {
-            "listPlans": {
-                "before": [],
-                "after": []
-        },
-            "unhealthyPlants": [],
-            "dataset": []
-    }
+    # return {
+    #         "listPlans": {
+    #             "before": [],
+    #             "after": []
+    #     },
+    #         "unhealthyPlants": [],
+    #         "dataset": []
+    # }
 
-    
     plantList = PotRegistry.objects.filter(Account=request.user)
     plantSerialIDList = []
     for plant in plantList:
@@ -176,5 +175,5 @@ def GetDashboardCRUD(request):
                 "after": after
         },
             "unhealthyPlants": unhealthyPlants,
-            "dataset": [dataset[1:]]
+            "dataset": dataset
     }
