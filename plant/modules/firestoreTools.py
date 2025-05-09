@@ -296,7 +296,7 @@ class FireStoreClient:
     def addTemperatureEntry(cls, entry, serialID):        
         db = cls._getFireStoreClient()
         
-        cls.checkStatRange('Temperature', entry['Value'], serialID)
+        # cls.checkStatRange('Temperature', entry['Value'], serialID)
         db.collection(cls._plantTemperatureCollectionName).document(serialID).collection('Logs').add(entry)
         
 
@@ -304,21 +304,22 @@ class FireStoreClient:
     def addMoistureEntry(cls, entry, serialID):        
         db = cls._getFireStoreClient()
         
-        cls.checkStatRange('Moisture', entry['Value'], serialID)
+        # cls.checkStatRange('Moisture', entry['Value'], serialID)
         db.collection(cls._plantMoistureCollectionName).document(serialID).collection('Logs').add(entry)
 
     @classmethod
     def addLightEntry(cls, entry, serialID):        
         db = cls._getFireStoreClient()
         
-        cls.checkStatRange('Light', entry['Value'], serialID)
+        # cls.checkStatRange('Light', entry['Value'], serialID)
         db.collection(cls._plantLightCollectionName).document(serialID).collection('Logs').add(entry)
 
     @classmethod
     def addSoilHumidityEntry(cls, entry, serialID):        
         db = cls._getFireStoreClient()
         
-        cls.checkStatRange('SoilHumidity', entry['Value'], serialID)
+        print(entry)
+        # cls.checkStatRange('SoilHumidity', entry['Value'], serialID)
         db.collection(cls._plantSoilHumidityCollectionName).document(serialID).collection('Logs').add(entry)
         
     @classmethod
