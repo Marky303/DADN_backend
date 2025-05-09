@@ -80,6 +80,8 @@ def DisownPotCRUD(potID):
 def AddTemperatureCRUD(request):
     dict = request.body.decode("UTF-8")
     entryInfo = json.loads(dict)['data']
+
+    print(entryInfo['soilHumidity'])
     
     serialID = entryInfo['SerialID']
     
@@ -89,13 +91,19 @@ def AddTemperatureCRUD(request):
     }
     FireStoreClient.addTemperatureEntry(template, serialID)
     
-    template['Value'] = entryInfo['light']
+    template = {
+        "Time": datetime.now().timestamp(),
+        "Value": entryInfo['light']
+    }
     FireStoreClient.addLightEntry(template, serialID)
     
     template['Value'] = entryInfo['moisture']
     FireStoreClient.addMoistureEntry(template, serialID)
     
-    template['Value'] = entryInfo['soilHumidity']
+    template = {
+        "Time": datetime.now().timestamp(),
+        "Value": entryInfo['soilHumidity']
+    }
     FireStoreClient.addSoilHumidityEntry(template, serialID)
     
 def GetPlanCRUD(request):
